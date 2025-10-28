@@ -60,7 +60,7 @@ def get_all_posts_from_page(page_link):
         is_added = db.add_new_item(post_id, price_byn, price_usd, parameters, address, short_description, post_url, hash_id)
         if is_added:
             data.append(item)
-            #tg.send_message(price_byn, price_usd, parameters, address, short_description, post_url)
+            tg.send_message(price_byn, price_usd, parameters, address, short_description, post_url)
             print('...New item in db...')
 
     return data
