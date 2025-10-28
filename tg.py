@@ -2,6 +2,7 @@ import time
 import telebot
 import os
 from dotenv import load_dotenv
+from logger import logger
 
 load_dotenv()
 
@@ -14,7 +15,9 @@ def send_message(price_byn, price_usd, parameters, address, short_description, p
     try:
         bot.send_message(group_chat_id, message_for_send)
     except Exception as e:
-        print("Error", e)
+        logger.critical(e)
     else:
-        time.sleep(1)
+        logger.info('New message was sent to chat')
+        logger.info('.....Sleep 2 seconds.....')
+        time.sleep(2)
 

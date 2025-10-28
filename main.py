@@ -7,6 +7,7 @@ from headers import my_headers
 import os
 from dotenv import load_dotenv
 import hashlib
+from logger import logger
 
 load_dotenv()
 
@@ -25,6 +26,7 @@ def get_all_pages_link(start_page_link):
         except (TypeError, KeyError):
             page_now = ''
         time.sleep(3)
+    logger.info(f'[{len(all_pages_link)}] pages found')
     return all_pages_link
 
 
@@ -61,24 +63,13 @@ def get_all_posts_from_page(page_link):
         if is_added:
             data.append(item)
             tg.send_message(price_byn, price_usd, parameters, address, short_description, post_url)
-            print('...New item in db...')
-
     return data
-
-
-"""def set_my_personal_id(address, parameters):
-    if address and parameters:
-        return address + parameters
-    else:
-        print(address, parameters)
-        return 'Empty'"""
 
 
 def set_hash_id(address, post_id):
     if address and post_id:
         return hashlib.sha256(str(post_id + address).encode()).hexdigest()
     else:
-        print(post_id, address)
         return 'Empty'
 
 
@@ -129,14 +120,16 @@ def run(url=os.getenv('STARTING_URL')):
     data = [url]
     for link in all_links:
         data.append(get_all_posts_from_page(link))
+        logger.info('.....Sleep_5_sec.....')
         time.sleep(5)
 
 
 if __name__ == '__main__':
-    print('-----PARSER_WAS_STARTED-----')
+    logger.info('-----PARSER_WAS_STARTED-----')
     while True:
         try:
             run()
+            logger.info('.....Sleep_20_min.....')
             time.sleep(20 * 60)
         except KeyboardInterrupt:
-            print('-----PARSER_WAS_CLOSED-----')
+            logger.info('-----PARSER_WAS_STOPPED-----')

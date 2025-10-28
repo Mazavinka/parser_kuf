@@ -2,6 +2,7 @@ import sqlite3
 import os
 from contextlib import closing
 from dotenv import load_dotenv
+from logger import logger
 
 
 load_dotenv()
@@ -16,6 +17,7 @@ def create_db_if_not_exist():
         cur.execute('''CREATE TABLE IF NOT EXISTS rooms (id INTEGER, price_byn REAL, price_usd REAL, parameters TEXT, address TEXT, short_description TEXT, url TEXT, hash_id TEXT PRIMARY KEY)''')
 
 
+
 def add_new_item(post_id, price_byn, price_usd, parameters, address, short_description, url, hash_id):
     create_db_if_not_exist()
     with connect() as conn, closing(conn.cursor()) as cur:
@@ -23,4 +25,5 @@ def add_new_item(post_id, price_byn, price_usd, parameters, address, short_descr
         VALUES (?, ?, ?, ? ,? ,? ,?, ?)''', (post_id, price_byn, price_usd, parameters, address, short_description, url, hash_id))
         affected = cur.rowcount
         if affected > 0:
+            logger.info(f'[{hash_id}] post has been added to db')
             return True
